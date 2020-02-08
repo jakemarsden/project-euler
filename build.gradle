@@ -1,0 +1,81 @@
+import com.jakemarsden.gradle.githooks.GitHooksPlugin
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+  id 'java-library'
+  id 'com.github.sherter.google-java-format' version '0.8'
+}
+
+apply plugin: GitHooksPlugin
+
+gitHooks {
+  hooks.put 'pre-commit', '-Penv=production check'
+}
+
+repositories {
+  jcenter()
+}
+
+ext {
+  buildEnv = findEnv()
+  junitVersion = '5.5.2'
+}
+
+dependencies {
+  testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+
+test {
+  useJUnitPlatform()
+}
+
+googleJavaFormat {
+  toolVersion = '1.7'
+  options style: 'GOOGLE'
+}
+
+verifyGoogleJavaFormat {
+  enabled = buildEnv == BuildEnv.PRODUCTION
+  mustRunAfter tasks.googleJavaFormat
+}
+
+task format {
+  dependsOn tasks.googleJavaFormat
+}
+
+tasks.withType(JavaCompile) {
+  mustRunAfter tasks.googleJavaFormat
+
+  options.compilerArgs += [
+    '-parameters',
+    '-Werror',
+    '-Xlint:all',
+    '-Xlint:-processing'
+  ]
+  options.deprecation = true
+  options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaExec) {
+  enableAssertions = buildEnv == BuildEnv.DEVELOPMENT
+}
+
+enum BuildEnv {
+  DEVELOPMENT,
+  PRODUCTION
+}
+
+/** Pass via '-Penv={dev|development|prod|production}' */
+private BuildEnv findEnv() {
+  final env = hasProperty('env') ? project.env : null
+  if (env == null || env.isBlank()) return BuildEnv.DEVELOPMENT
+  if ('development'.startsWith(env)) return BuildEnv.DEVELOPMENT
+  if ('production'.startsWith(env)) return BuildEnv.PRODUCTION
+  throw new IllegalStateException("Unsupported \"env\" property: \"$env\"")
+}
