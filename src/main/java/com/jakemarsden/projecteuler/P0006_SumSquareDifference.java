@@ -8,9 +8,13 @@ final class P0006_SumSquareDifference {
     int sumOfSquares = 0;
     for (int i = 0; i <= n; i++) sumOfSquares += i * i;
 
-    int sum = (n + 1) * (n / 2);
+    int sum = nthTriangleNumber(n);
     int squareOfSum = sum * sum;
 
     return abs(sumOfSquares - squareOfSum);
+  }
+
+  private int nthTriangleNumber(int n) {
+    return n * (n + 1) / 2;
   }
 }
