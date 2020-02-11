@@ -29,24 +29,37 @@ final class MathUtils {
   }
 
   /**
+   * If the caller already knows certain things about {@code n}, it may consider using {@code
+   * #isPrimeAssumeOdd(int)} for performance
+   *
    * @param n the value to check
-   * @return {@true} if {@code n} is a prime number
+   * @return {@code true} if {@code n} is prime
    * @see #isPrimeAssumeOdd(int)
    */
   static boolean isPrime(int n) {
+    if (n < 2) return false;
     if (n == 2) return true;
     if (n % 2 == 0) return false;
     return isPrimeAssumeOdd(n);
   }
 
   /**
-   * Assumes that {@code n} is either <em>odd</em>, or is <em>exactly {@code 2}</em> for
-   * performance. This means that even values {@code &gt;2} will be erroneously considered primes.
-   * The caller <strong>must check</strong> for divisibility by {@code 2} if this is not the desired
-   * behaviour.
+   * Assume that {@code n} is either <em>odd</em> or is <em>exactly {@code 2}</em>, for performance.
+   * This means that some even values of {@code n} (but not {@code 2}) will be erroneously
+   * considered prime.
    *
-   * @param n the value to check
-   * @return {@code true} if {@code n} is a prime or an even number
+   * <p>The caller is <strong>strongly encouraged</strong> to use {@link #isPrime(int)} if
+   * divisibility by {@code 2} is not implied by the surrounding code.
+   *
+   * @param n the <em>odd</em> value to check, {@code >= 2}
+   * @return
+   *     <ul>
+   *       <li><em>garbage</em> if {@code n < 2}
+   *       <li><em>garbage</em> if {@code n > 2} and {@code n} is even
+   *       <li>{@code true} if {@code n} is prime
+   *       <li>{@code false} otherwise
+   *     </ul>
+   *
    * @see #isPrime(int)
    */
   static boolean isPrimeAssumeOdd(int n) {
@@ -58,10 +71,19 @@ final class MathUtils {
   }
 
   /**
-   * Generates the next prime number in a sequence
+   * Finds the first prime number greater than {@code n}. {@code n} itself doesn't need to be prime,
+   * although it should be {@code >= 2}. Can be used to iterate over a sequence of primes, e.g.:
    *
-   * @param n the current position in a sequence of prime numbers
-   * @return the first prime number which is greater than {@code n}
+   * <p><code>
+   * <pre>
+   * for (int prime = 2; prime <= maxPrime; prime = nextPrime(prime)) {
+   *   ...
+   * }
+   * </pre>
+   * </code>
+   *
+   * @param n {@code >= 2}
+   * @return the first prime number greater than {@code n}, or garbage if {@code n < 2}
    */
   static int nextPrime(int n) {
     n += 1 + (n % 2);
