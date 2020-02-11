@@ -3,7 +3,30 @@ package com.jakemarsden.projecteuler;
 import static java.lang.Math.ceil;
 import static java.lang.Math.sqrt;
 
+import java.math.BigInteger;
+
 final class MathUtils {
+
+  /** @return {@code n!} */
+  static BigInteger factorial(int n) {
+    return factorialQuotient(n, 1);
+  }
+
+  /**
+   * <code>
+   * <pre>
+   * <sup>5!</sup>/<sub>3!</sub> = <sup>5*4*3*2*1</sup>/<sub>3*2*1</sub> = 5*4
+   * </pre>
+   * </code>
+   *
+   * @return {@code (dividend)! / (divisor)!}
+   */
+  static BigInteger factorialQuotient(int dividend, int divisor) {
+    assert dividend >= divisor;
+    var product = BigInteger.ONE;
+    for (int n = dividend; n > divisor; n--) product = product.multiply(BigInteger.valueOf(n));
+    return product;
+  }
 
   /**
    * @param n the value to check
