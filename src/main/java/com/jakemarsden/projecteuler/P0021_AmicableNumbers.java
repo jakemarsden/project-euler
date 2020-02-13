@@ -3,29 +3,34 @@ package com.jakemarsden.projecteuler;
 import static java.lang.Math.ceil;
 import static java.lang.Math.sqrt;
 
-/** TODO: Optimise solution (current runtime ~40s) */
 final class P0021_AmicableNumbers {
 
-  int sumOfAmicableNumbers(int limitExclusive) {
+  int sumAmicableNumbersUnder(int limitExclusive) {
+    var startTime = System.currentTimeMillis();
+
     var sum = 0;
 
-    // `d(n) == 0` for `n=1` only, so start with `i=2, j=3`
-    for (int i = 2; i < limitExclusive - 1; i++) {
-      for (int j = i + 1; j < limitExclusive; j++) {
-        if (isAmicablePair(i, j)) sum += i + j;
+    // `d(n) == 0` for `n=1` only, so start with `a=2, b=3`
+    for (int a = 2; a < limitExclusive - 1; a++) {
+      var sumDivisorsOfA = sumDivisorsOf(a, Integer.MAX_VALUE);
+
+      for (int b = a + 1; b < limitExclusive; b++) {
+        if (sumDivisorsOfA != b) continue;
+        if (sumDivisorsOf(b, sumDivisorsOfA) != a) continue;
+        sum += a;
+        sum += b;
       }
     }
+
+    var endTime = System.currentTimeMillis();
+    System.out.printf("Calculated %,d in %,d ms%n", sum, endTime - startTime);
+
     return sum;
   }
 
-  boolean isAmicablePair(int a, int b) {
-    assert a != b;
-    return d(a) == b && d(b) == a;
-  }
-
-  int d(int n) {
-    // start at 1: all `n` are divisible by 1 and `n`, but we don't want to add `n` as the divisor
-    //   must be `< n`
+  /** @return {@code -1 || [1, limit)} */
+  int sumDivisorsOf(int n, int limit) {
+    // start at 1: all `n` are divisible by 1 and `n`, but add only 1 as the divisor must be `< n`
     int sumOfDivisors = 1;
 
     var maxDivisor = (int) ceil(sqrt(n));
@@ -33,10 +38,11 @@ final class P0021_AmicableNumbers {
       if (n % divisor == 0) {
         sumOfDivisors += divisor;
         sumOfDivisors += n / divisor;
+        if (sumOfDivisors > limit) return -1;
       }
     }
     if (n % maxDivisor == 0) {
-      // it's a square number, only add `sqrt(n)` once
+      // `n` is a perfect square, only add the divisor (`sqrt(n)`) once
       sumOfDivisors += maxDivisor;
     }
     return sumOfDivisors;
