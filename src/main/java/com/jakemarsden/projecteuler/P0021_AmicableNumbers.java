@@ -6,8 +6,6 @@ import static java.lang.Math.sqrt;
 final class P0021_AmicableNumbers {
 
   int sumAmicableNumbersUnder(int limitExclusive) {
-    var startTime = System.currentTimeMillis();
-
     var sum = 0;
 
     // `d(n) == 0` for `n=1` only, so start with `a=2, b=3`
@@ -21,10 +19,6 @@ final class P0021_AmicableNumbers {
         sum += b;
       }
     }
-
-    var endTime = System.currentTimeMillis();
-    System.out.printf("Calculated %,d in %,d ms%n", sum, endTime - startTime);
-
     return sum;
   }
 
