@@ -7,6 +7,14 @@ import java.math.BigInteger;
 
 public final class MathUtils {
 
+  /**
+   * @see Math#log(double)
+   * @see Math#log10(double)
+   */
+  public static double log(int n, int base) {
+    return Math.log(n) / Math.log(base);
+  }
+
   /** @return {@code n!} */
   public static BigInteger factorial(int n) {
     return factorialQuotient(n, 1);

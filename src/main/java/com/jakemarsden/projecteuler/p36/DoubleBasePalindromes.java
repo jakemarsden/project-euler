@@ -1,5 +1,8 @@
 package com.jakemarsden.projecteuler.p36;
 
+import static com.jakemarsden.projecteuler.util.MathUtils.log;
+import static java.lang.Math.floor;
+
 final class DoubleBasePalindromes {
 
   int sumDoubleBasePalindromesUnder(int limit) {
@@ -11,8 +14,7 @@ final class DoubleBasePalindromes {
   }
 
   boolean isDoubleBasePalindrome(int n) {
-    return isPalindrome(Integer.toUnsignedString(n, 10))
-        && isPalindrome(Integer.toUnsignedString(n, 2));
+    return isPalindrome(intToString(n, 10)) && isPalindrome(intToString(n, 2));
   }
 
   boolean isPalindrome(String str) {
@@ -24,5 +26,20 @@ final class DoubleBasePalindromes {
       idx2--;
     }
     return true;
+  }
+
+  String intToString(int n, int radix) {
+    assert radix > 0 && radix <= 10;
+    if (n == 0) return "0";
+
+    var digitCount = (int) floor(log(n, radix)) + 1;
+    var sb = new StringBuilder(digitCount);
+
+    while (n != 0) {
+      var digit = n % radix;
+      n /= radix;
+      sb.append((char) (digit + '0'));
+    }
+    return sb.toString();
   }
 }

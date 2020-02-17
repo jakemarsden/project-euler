@@ -8,6 +8,16 @@ import org.junit.jupiter.api.Test;
 class DoubleBasePalindromesTest {
 
   @Test
+  void intToString() {
+    var obj = new DoubleBasePalindromes();
+    assertEquals("585", obj.intToString(585, 10));
+    assertEquals("1001001001", obj.intToString(585, 2));
+
+    assertEquals("0", obj.intToString(0, 10));
+    assertEquals("0", obj.intToString(0, 2));
+  }
+
+  @Test
   void isPalindrome() {
     var obj = new DoubleBasePalindromes();
     assertTrue(obj.isPalindrome("585"));

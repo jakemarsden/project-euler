@@ -9,6 +9,14 @@ import org.junit.jupiter.api.Test;
 
 class MathUtilsTest {
 
+  private static final double EPSILON = 1e-8;
+
+  @Test
+  void log() {
+    assertEquals(6.0, MathUtils.log(1_000_000, 10), EPSILON);
+    assertEquals(8.0, MathUtils.log(256, 2), EPSILON);
+  }
+
   @Test
   void factorial() {
     assertEquals(BigInteger.valueOf(120), MathUtils.factorial(5));
