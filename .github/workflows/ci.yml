@@ -10,4 +10,4 @@ jobs:
         with:
           java-version: 11
       - name: Build
-        run: ./gradlew -Penv=production build
+        run: ./gradlew -Penv=production --info build
