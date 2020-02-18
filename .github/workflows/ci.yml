@@ -5,9 +5,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: 11
+
       - name: Build
         run: ./gradlew --info build
+
+      - name: Upload JARs
+        uses: actions/upload-artifact@v1
+        with:
+          name: jars
+          path: build/libs
+
+      - name: Upload test report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-report
+          path: build/reports/tests/test
+
+      - name: Upload coverage report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage-report
+          path: build/reports/jacoco/test/html
