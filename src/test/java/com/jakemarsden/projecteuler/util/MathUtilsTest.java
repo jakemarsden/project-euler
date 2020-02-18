@@ -12,6 +12,16 @@ class MathUtilsTest {
   private static final double EPSILON = 1e-8;
 
   @Test
+  void nthTriangleNumber() {
+    assertEquals(1, MathUtils.nthTriangleNumber(1));
+    assertEquals(3, MathUtils.nthTriangleNumber(2));
+    assertEquals(55, MathUtils.nthTriangleNumber(10));
+    assertEquals(4_950, MathUtils.nthTriangleNumber(99));
+    assertEquals(5_050, MathUtils.nthTriangleNumber(100));
+    assertEquals(5_151, MathUtils.nthTriangleNumber(101));
+  }
+
+  @Test
   void log() {
     assertEquals(6.0, MathUtils.log(1_000_000, 10), EPSILON);
     assertEquals(8.0, MathUtils.log(256, 2), EPSILON);

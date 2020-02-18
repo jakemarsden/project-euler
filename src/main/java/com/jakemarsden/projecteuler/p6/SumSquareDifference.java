@@ -1,5 +1,6 @@
 package com.jakemarsden.projecteuler.p6;
 
+import static com.jakemarsden.projecteuler.util.MathUtils.nthTriangleNumber;
 import static java.lang.Math.abs;
 
 final class SumSquareDifference {
@@ -12,9 +13,5 @@ final class SumSquareDifference {
     int squareOfSum = sum * sum;
 
     return abs(sumOfSquares - squareOfSum);
-  }
-
-  private int nthTriangleNumber(int n) {
-    return n * (n + 1) / 2;
   }
 }
