@@ -14,6 +14,7 @@ class NonAbundantSumsTest {
     assertTrue(obj.isAbundant(12));
     assertTrue(obj.isAbundant(18));
     assertTrue(obj.isAbundant(20));
+    assertTrue(obj.isAbundant(24));
 
     for (int i = 2; i < 12; i++) {
       var n = i;
@@ -26,18 +27,24 @@ class NonAbundantSumsTest {
   }
 
   @Test
-  void isSumOfTwoAbundants() {
+  void isSumOfTwoAbundantNumbers() {
+    var abundancies = new boolean[29];
+    abundancies[12] = true;
+    abundancies[18] = true;
+    abundancies[20] = true;
+    abundancies[24] = true;
+
     var obj = new NonAbundantSums();
-    assertTrue(obj.isSumOfTwoAbundants(12 + 12));
-    assertTrue(obj.isSumOfTwoAbundants(12 + 18));
-    assertTrue(obj.isSumOfTwoAbundants(18 + 18));
+    assertTrue(obj.isSumOfTwoAbundantNumbers(12 + 12, abundancies));
+    assertTrue(obj.isSumOfTwoAbundantNumbers(12 + 18, abundancies));
+    assertTrue(obj.isSumOfTwoAbundantNumbers(18 + 18, abundancies));
 
     for (int i = 1; i < 24; i++) {
       var n = i;
-      assertFalse(obj.isSumOfTwoAbundants(n), () -> Integer.toString(n));
+      assertFalse(obj.isSumOfTwoAbundantNumbers(n, abundancies), () -> Integer.toString(n));
     }
-    assertFalse(obj.isSumOfTwoAbundants(25));
-    assertFalse(obj.isSumOfTwoAbundants(29));
+    assertFalse(obj.isSumOfTwoAbundantNumbers(25, abundancies));
+    assertFalse(obj.isSumOfTwoAbundantNumbers(29, abundancies));
   }
 
   @Test

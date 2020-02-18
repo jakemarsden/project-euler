@@ -10,10 +10,7 @@ final class NonAbundantSums {
   private static final int MIN_ABUNDANT_NUMBER = 12;
   /** Smallest positive integer which can be written as the sum of two abundant numbers */
   private static final int MIN_ABUNDANT_SUM = 2 * MIN_ABUNDANT_NUMBER;
-  /**
-   * It can be shown that all integers greater than {@code 28,123} can be written as the sum of two
-   * abundant numbers
-   */
+  /** All integers {@code >=} this value can be written as the sum of two abundant numbers */
   private static final int MIN_WITH_GUARANTEED_ABUNDANT_SUM = 28_123 + 1;
 
   /**
@@ -21,9 +18,13 @@ final class NonAbundantSums {
    *     abundant numbers
    */
   int sum() {
+    // pre-cache whether each required value is abundant
+    var abundancies = genAbundancies(MIN_WITH_GUARANTEED_ABUNDANT_SUM - MIN_ABUNDANT_NUMBER - 1);
+
     int sum = nthTriangleNumber(MIN_ABUNDANT_SUM - 1);
     for (int n = MIN_ABUNDANT_SUM + 1; n < MIN_WITH_GUARANTEED_ABUNDANT_SUM; n++) {
-      if (!isSumOfTwoAbundants(n)) sum += n;
+      var isAbundantSum = isSumOfTwoAbundantNumbers(n, abundancies);
+      sum += n * (isAbundantSum ? 0 : 1);
     }
     return sum;
   }
@@ -32,11 +33,17 @@ final class NonAbundantSums {
    * @return {@code true} if {@code n} can be written as {@code a+b}, where {@code a} and {@code b}
    *     are both {@link #isAbundant(int) abundant} integers
    */
-  boolean isSumOfTwoAbundants(int n) {
+  boolean isSumOfTwoAbundantNumbers(int n, boolean[] isAbundant) {
     for (int a = MIN_ABUNDANT_NUMBER; a <= n / 2; a++) {
-      if (isAbundant(a) && isAbundant(n - a)) return true;
+      if (isAbundant[a] && isAbundant[n - a]) return true;
     }
     return false;
+  }
+
+  private boolean[] genAbundancies(int max) {
+    var abundancies = new boolean[max + 1];
+    for (int n = MIN_ABUNDANT_NUMBER; n <= max; n++) abundancies[n] = isAbundant(n);
+    return abundancies;
   }
 
   /** @return {@code true} if the sum of the proper divisors of {@code n} exceeds {@code n} */
