@@ -12,7 +12,7 @@ jobs:
           java-version: 11
 
       - name: Build
-        run: ./gradlew --info build
+        run: ./gradlew build
 
       - name: Upload JARs
         uses: actions/upload-artifact@v1
