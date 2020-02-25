@@ -1,6 +1,7 @@
 package com.jakemarsden.projecteuler.util;
 
 import static java.lang.Math.ceil;
+import static java.lang.Math.max;
 import static java.lang.Math.sqrt;
 
 import java.math.BigInteger;
@@ -21,21 +22,42 @@ public final class MathUtils {
   }
 
   /** @return {@code n!} */
-  public static BigInteger factorial(int n) {
+  public static long factorial(int n) {
     return factorialQuotient(n, 1);
   }
 
   /**
-   * <code>
+   * Example: <code>
    * <pre>
    * <sup>5!</sup>/<sub>3!</sub> = <sup>5*4*3*2*1</sup>/<sub>3*2*1</sub> = 5*4
    * </pre>
    * </code>
    *
-   * @return {@code (dividend)! / (divisor)!}
+   * @return <code><sup>dividend!</sup>/<sub>divisor!</sub></code>
    */
-  public static BigInteger factorialQuotient(int dividend, int divisor) {
-    assert dividend >= divisor;
+  public static long factorialQuotient(int dividend, int divisor) {
+    assert max(dividend, 1) >= divisor;
+    long product = 1;
+    for (int n = dividend; n > divisor; n--) product *= n;
+    return product;
+  }
+
+  /** @return {@code n!} */
+  public static BigInteger bigFactorial(int n) {
+    return bigFactorialQuotient(n, 1);
+  }
+
+  /**
+   * Example: <code>
+   * <pre>
+   * <sup>5!</sup>/<sub>3!</sub> = <sup>5*4*3*2*1</sup>/<sub>3*2*1</sub> = 5*4
+   * </pre>
+   * </code>
+   *
+   * @return <code><sup>dividend!</sup>/<sub>divisor!</sub></code>
+   */
+  public static BigInteger bigFactorialQuotient(int dividend, int divisor) {
+    assert max(dividend, 1) >= divisor;
     var product = BigInteger.ONE;
     for (int n = dividend; n > divisor; n--) product = product.multiply(BigInteger.valueOf(n));
     return product;

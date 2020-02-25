@@ -29,12 +29,28 @@ class MathUtilsTest {
 
   @Test
   void factorial() {
-    assertEquals(BigInteger.valueOf(120), MathUtils.factorial(5));
+    assertEquals(1, MathUtils.factorial(0));
+    assertEquals(1, MathUtils.factorial(1));
+    assertEquals(2, MathUtils.factorial(2));
+    assertEquals(120, MathUtils.factorial(5));
   }
 
   @Test
   void factorialQuotient() {
-    assertEquals(BigInteger.valueOf(20), MathUtils.factorialQuotient(5, 3));
+    assertEquals(20, MathUtils.factorialQuotient(5, 3));
+  }
+
+  @Test
+  void bigFactorial() {
+    assertEquals(BigInteger.ONE, MathUtils.bigFactorial(0));
+    assertEquals(BigInteger.ONE, MathUtils.bigFactorial(1));
+    assertEquals(BigInteger.TWO, MathUtils.bigFactorial(2));
+    assertEquals(BigInteger.valueOf(120), MathUtils.bigFactorial(5));
+  }
+
+  @Test
+  void bigFactorialQuotient() {
+    assertEquals(BigInteger.valueOf(20), MathUtils.bigFactorialQuotient(5, 3));
   }
 
   @Test

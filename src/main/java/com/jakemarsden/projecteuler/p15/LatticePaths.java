@@ -1,7 +1,7 @@
 package com.jakemarsden.projecteuler.p15;
 
-import static com.jakemarsden.projecteuler.util.MathUtils.factorial;
-import static com.jakemarsden.projecteuler.util.MathUtils.factorialQuotient;
+import static com.jakemarsden.projecteuler.util.MathUtils.bigFactorial;
+import static com.jakemarsden.projecteuler.util.MathUtils.bigFactorialQuotient;
 
 final class LatticePaths {
 
@@ -13,7 +13,7 @@ final class LatticePaths {
    * </code>
    */
   long calcRouteCount(int n) {
-    var routeCount = factorialQuotient(2 * n, n).divide(factorial(n));
+    var routeCount = bigFactorialQuotient(2 * n, n).divide(bigFactorial(n));
     return routeCount.longValueExact();
   }
 }
