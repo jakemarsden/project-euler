@@ -1,18 +1,17 @@
 package com.jakemarsden.projecteuler.p24;
 
-import static java.util.Collections.unmodifiableList;
+import static java.lang.System.arraycopy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Function;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 final class LexicographicPermutations {
 
   /**
-   * TODO: Improve efficiency => This method currently lists <strong>all possible
-   * permutations</strong> of digits out-of-order, sorts them lexicographically, and returns the
-   * <code>n<sup>th</sup></code> permutation. It would be <em>much</em> more efficient to generate
-   * the permutations <strong>in-order</strong> and just stop as soon as the <code><sup>th</sup>
-   * </code> permutation is reached.
+   * TODO: Improve efficiency => We don't need to actually generate each permutation as it should be
+   * possible to <em>do the maths</em> to "jump" straight to the <code>n<sup>th</sup></code>
+   * permutation
    *
    * @param n One-based
    * @param digitCount Digits used will be in the half-open range {@code [0, digitCount)}
@@ -23,58 +22,65 @@ final class LexicographicPermutations {
     assert n > 0;
     assert digitCount > 0;
 
-    List<Integer> digits = new ArrayList<>(digitCount);
-    for (int digit = 0; digit < digitCount; digit++) digits.add(digit);
+    var digits = new int[digitCount];
+    for (int digit = 0; digit < digitCount; digit++) digits[digit] = digit;
 
-    var permutations = permutationsOf(digits);
-    return permutations.stream()
-        .mapToLong(this::permutationAsInt)
-        .sorted()
+    return permutationsOf(digits)
         .skip(n - 1)
         .findFirst()
-        .orElseThrow();
+        .map(this::permutationAsInt)
+        .orElseThrow(); //
   }
 
-  private <T> List<List<T>> permutationsOf(List<T> items) {
-    if (items.size() == 1)
+  /**
+   * Returns a stream of all possible permutations of the given {@code items}, in order.
+   *
+   * <p>Example usage ({@code n=3}):
+   *
+   * <pre><code>
+   * permutationsOf(0, 1, 2) == Stream.of(
+   *   {0, 1, 2},
+   *   {0, 2, 1},
+   *   {1, 0, 2},
+   *   {1, 2, 0},
+   *   {2, 0, 1},
+   *   {2, 1, 0}
+   * )</code></pre>
+   */
+  private Stream<int[]> permutationsOf(int... items) {
+    if (items.length == 1)
       // Base case: there is 1 permutation of 1 item
-      return List.of(items);
-
-    if (items.size() == 2)
-      // Base case: there are 2 permutations of 2 items
-      return List.of(
-          List.of(items.get(0), items.get(1)), //
-          List.of(items.get(1), items.get(0)));
+      return Stream.of(items);
 
     // General case: there are `n!` permutations of `n` items
-    List<List<T>> permutations = new ArrayList<>();
-    for (int prefixItemIdx = 0; prefixItemIdx < items.size(); prefixItemIdx++) {
-      // Each item has a "go" at being the *prefix*...
-      var prefix = items.get(prefixItemIdx);
+    return IntStream.range(0, items.length)
+        .mapToObj(
+            prefixIdx -> {
+              // Each item has a "go" at being the *prefix*...
+              var prefixItem = items[prefixIdx];
 
-      // ...leaving each of the remaining items as part of the *suffix*...
-      List<T> suffixItems = new ArrayList<>(items.size() - 1);
-      for (int suffixIdx = 0; suffixIdx < items.size() - 1; suffixIdx++) {
-        var suffixItemIdx = (prefixItemIdx + 1 + suffixIdx) % items.size();
-        suffixItems.add(items.get(suffixItemIdx));
-      }
+              // ...leaving each of the remaining items as part of the *suffix*...
+              var suffixItems = new int[items.length - 1];
+              for (int itemIdx = 0, suffixIdx = 0; itemIdx < items.length; itemIdx++) {
+                if (itemIdx != prefixIdx) suffixItems[suffixIdx++] = items[itemIdx];
+              }
 
-      // ...so all *suffix permutations* are found recursively...
-      var suffixPermutations = permutationsOf(suffixItems);
+              // ...so all *suffix permutations* are found recursively...
+              var suffixPermutations = this.permutationsOf(suffixItems);
 
-      // ...which leads to one permutation of items for each *prefix*/*suffix permutation* pair
-      for (var suffixPermutation : suffixPermutations) {
-        List<T> permutation = new ArrayList<>(items.size());
-        permutation.add(prefix);
-        permutation.addAll(suffixPermutation);
-        permutations.add(permutation);
-      }
-    }
-
-    return unmodifiableList(permutations);
+              // ...leading to one permutation for each *prefix*/*suffix permutation* pair
+              return suffixPermutations.map(
+                  suffixPermutation -> {
+                    var permutation = new int[items.length];
+                    permutation[0] = prefixItem;
+                    arraycopy(suffixPermutation, 0, permutation, 1, suffixPermutation.length);
+                    return permutation;
+                  });
+            })
+        .flatMap(Function.identity());
   }
 
-  private long permutationAsInt(List<Integer> permutation) {
+  private long permutationAsInt(int[] permutation) {
     long value = 0;
     for (long digit : permutation) {
       value *= 10;
