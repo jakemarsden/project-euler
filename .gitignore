@@ -1,8 +1,6 @@
 *.log*
 .gradle
 build
-buildSrc/.gradle
-buildSrc/build
 
 # see https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 .idea/**/*.iml

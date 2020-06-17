@@ -1,15 +1,12 @@
-import com.jakemarsden.gradle.githooks.GitHooksPlugin
-
 plugins {
   id 'jacoco'
   id 'java-library'
+  id 'com.github.jakemarsden.git-hooks' version '0.0.2'
   id 'com.github.sherter.google-java-format' version '0.9'
 }
 
-apply plugin: GitHooksPlugin
-
 gitHooks {
-  hooks.put 'pre-commit', 'check'
+  hooks = ['pre-commit': 'check']
 }
 
 repositories {
