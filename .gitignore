@@ -1,16 +1,4 @@
 *.log*
 .gradle
+.idea
 build
-
-# see https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
-.idea/**/*.iml
-.idea/.name
-.idea/dictionaries
-.idea/gradle.xml
-.idea/libraries
-.idea/misc.xml
-.idea/modules.xml
-.idea/shelf
-.idea/tasks.xml
-.idea/usage.statistics.xml
-.idea/workspace.xml
