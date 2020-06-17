@@ -3,7 +3,7 @@ import com.jakemarsden.gradle.githooks.GitHooksPlugin
 plugins {
   id 'jacoco'
   id 'java-library'
-  id 'com.github.sherter.google-java-format' version '0.8'
+  id 'com.github.sherter.google-java-format' version '0.9'
 }
 
 apply plugin: GitHooksPlugin
@@ -17,7 +17,7 @@ repositories {
 }
 
 ext {
-  junitVersion = '5.5.2'
+  junitVersion = '5.6.2'
 }
 
 dependencies {
@@ -37,7 +37,7 @@ test {
 }
 
 googleJavaFormat {
-  toolVersion = '1.7'
+  toolVersion = '1.8'
   options style: 'GOOGLE'
 }
 
